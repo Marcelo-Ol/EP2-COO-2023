@@ -44,7 +44,7 @@ public class GeradorDeRelatorios {
 		this.filtro = filtro;
 		this.argFiltro = argFiltro;
 	}
-
+	//testando
 	private int particiona(int ini, int fim){
 
 		Produto x = produtos[ini];
