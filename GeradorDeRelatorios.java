@@ -42,7 +42,7 @@ public class GeradorDeRelatorios {
         System.out.println("parametro filtro = '" + argFiltro + "'");
     }
 
-    public void geraRelatorio(String arquivoSaida) throws IOException {
+	public void geraRelatorio(String arquivoSaida) throws IOException {
         debug();
 
         Comparator<Produto> comparador = null;
@@ -57,9 +57,17 @@ public class GeradorDeRelatorios {
             throw new IllegalArgumentException("Criterio invalido!");
         }
 
-        OrdenadorDeProdutos ordenador = new OrdenadorDeProdutos(produtos);
-        ordenador.ordenar(algoritmo, criterio);
-        produtos = ordenador.getProdutosOrdenados();
+        OrdenadorDeProdutos ordenador;
+
+        if (algoritmo.equals(ALG_INSERTIONSORT)) {
+            ordenador = new InsertionSort();
+        } else if (algoritmo.equals(ALG_QUICKSORT)) {
+            ordenador = new QuickSort();
+        } else {
+            throw new IllegalArgumentException("Algoritmo de ordenação inválido!");
+        }
+
+        ordenador.ordenar(produtos, comparador);
 
         PrintWriter out = new PrintWriter(arquivoSaida);
 
@@ -106,18 +114,18 @@ public class GeradorDeRelatorios {
                     out.print("</span>");
                 }
 
-				out.println("</li>");
-				count++;
-			}
-		}
+                out.println("</li>");
+                count++;
+            }
+        }
 
-		out.println("</ul>");
-		out.println(count + " produtos listados, de um total de " + produtos.size() + ".");
-		out.println("</body>");
-		out.println("</html>");
+        out.println("</ul>");
+        out.println(count + " produtos listados, de um total de " + produtos.size() + ".");
+        out.println("</body>");
+        out.println("</html>");
 
-		out.close();
-	}
+        out.close();
+    }
 
 	public static ArrayList<Produto> carregaProdutos() {
 		ArrayList<Produto> produtos = new ArrayList<>();

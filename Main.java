@@ -32,6 +32,17 @@ public class Main {
         }
 
         ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutos();
+        OrdenadorDeProdutos ordenador;
+
+        if (opcao_algoritmo.equals(GeradorDeRelatorios.ALG_INSERTIONSORT)) {
+            ordenador = new InsertionSort();
+        } else if (opcao_algoritmo.equals(GeradorDeRelatorios.ALG_QUICKSORT)) {
+            ordenador = new QuickSort();
+        } else {
+            System.out.println("Algoritmo de ordenação inválido!");
+            System.exit(1);
+        }
+
         GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, formato);
 
         try {
