@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,10 +31,11 @@ public class Main {
             formato |= (op != null ? op.equals("negrito") ? GeradorDeRelatorios.FORMATO_NEGRITO : (op.equals("italico") ? GeradorDeRelatorios.FORMATO_ITALICO : 0) : 0);
         }
 
-        GeradorDeRelatorios gdr = new GeradorDeRelatorios(GeradorDeRelatorios.carregaProdutos(), opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, formato);
+        ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutos();
+        GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, formato);
 
         try {
-            gdr.geraRelatorio("saida.html");
+            gerador.geraRelatorio("saida.html");
         } catch (IOException e) {
             e.printStackTrace();
         }
