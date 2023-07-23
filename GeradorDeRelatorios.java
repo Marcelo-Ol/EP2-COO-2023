@@ -10,29 +10,31 @@ public class GeradorDeRelatorios {
     public static final String CRIT_DESC_CRESC = "descricao_c";
     public static final String CRIT_PRECO_CRESC = "preco_c";
     public static final String CRIT_ESTOQUE_CRESC = "estoque_c";
-
+    
     public static final String FILTRO_TODOS = "todos";
     public static final String FILTRO_ESTOQUE_MENOR_OU_IQUAL_A = "estoque_menor_igual";
     public static final String FILTRO_CATEGORIA_IGUAL_A = "categoria_igual";
 
-    // operador bit a bit "ou" pode ser usado para combinar mais de
-    // um estilo de formatacao simultaneamente (veja como no main)
-    public static final int FORMATO_PADRAO  = 0b0000;
-    public static final int FORMATO_NEGRITO = 0b0001;
-    public static final int FORMATO_ITALICO = 0b0010;
+	// operador bit a bit "ou" pode ser usado para combinar mais de  
+	// um estilo de formatacao simultaneamente (veja como no main)
+	public static final int FORMATO_PADRAO  = 0b0000;
+	public static final int FORMATO_NEGRITO = 0b0001;
+	public static final int FORMATO_ITALICO = 0b0010;
 
-    private ArrayList<ProdutoFormatado> produtos;
+    private ArrayList<Produto> produtos;
     private String algoritmo;
     private String criterio;
     private String filtro;
     private String argFiltro;
+    private int format_flags;
 
-    public GeradorDeRelatorios(ArrayList<ProdutoFormatado> produtos, String algoritmo, String criterio, String filtro, String argFiltro) {
+	public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags){
         this.produtos = new ArrayList<>(produtos);
         this.algoritmo = algoritmo;
         this.criterio = criterio;
         this.filtro = filtro;
         this.argFiltro = argFiltro;
+        this.format_flags = format_flags;
     }
 
     public void debug() {
@@ -40,7 +42,7 @@ public class GeradorDeRelatorios {
         System.out.println("parametro filtro = '" + argFiltro + "'");
     }
 
-    public void geraRelatorio(String arquivoSaida) throws IOException {
+	public void geraRelatorio(String arquivoSaida) throws IOException {
         debug();
 
         Comparator<Produto> comparador = null;
@@ -78,26 +80,40 @@ public class GeradorDeRelatorios {
         int count = 0;
 
         for (int i = 0; i < produtos.size(); i++) {
-            ProdutoFormatado produtoFormatado = produtos.get(i);
+            Produto p = produtos.get(i);
             boolean selecionado = false;
 
             if (filtro.equals(FILTRO_TODOS)) {
                 selecionado = true;
             } else if (filtro.equals(FILTRO_ESTOQUE_MENOR_OU_IQUAL_A)) {
-                if (produtoFormatado.getProduto().getQtdEstoque() <= Integer.parseInt(argFiltro)) {
-                    selecionado = true;
-                }
+                if (p.getQtdEstoque() <= Integer.parseInt(argFiltro)) selecionado = true;    
             } else if (filtro.equals(FILTRO_CATEGORIA_IGUAL_A)) {
-                if (produtoFormatado.getProduto().getCategoria().equalsIgnoreCase(argFiltro)) {
-                    selecionado = true;
-                }
+                if (p.getCategoria().equalsIgnoreCase(argFiltro)) selecionado = true;
             } else {
-                throw new RuntimeException("Filtro invalido!");
+                throw new RuntimeException("Filtro invalido!");            
             }
 
             if (selecionado) {
                 out.print("<li>");
-                out.print(produtoFormatado.formataParaImpressao());
+
+                if ((format_flags & FORMATO_ITALICO) > 0) {
+                    out.print("<span style=\"font-style:italic\">");
+                }
+
+                if ((format_flags & FORMATO_NEGRITO) > 0) {
+                    out.print("<span style=\"font-weight:bold\">");
+                } 
+            
+                out.print(p.formataParaImpressao());
+
+                if ((format_flags & FORMATO_NEGRITO) > 0) {
+                    out.print("</span>");
+                } 
+
+                if ((format_flags & FORMATO_ITALICO) > 0) {
+                    out.print("</span>");
+                }
+
                 out.println("</li>");
                 count++;
             }
@@ -111,7 +127,7 @@ public class GeradorDeRelatorios {
         out.close();
     }
 
-    public static ArrayList<Produto> carregaProdutos() {
+	public static ArrayList<Produto> carregaProdutos() {
 		ArrayList<Produto> produtos = new ArrayList<>();
 
 		produtos.add(new ProdutoPadrao(1, "O Hobbit", "Livros", 2, 34.90));
