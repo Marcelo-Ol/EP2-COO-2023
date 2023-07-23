@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -41,7 +41,22 @@ public class Main {
         } else {
             System.out.println("Algoritmo de ordenação inválido!");
             System.exit(1);
+            return;
         }
+
+        Map<String, CriterioOrdenacao> criteriosOrdenacao = new HashMap<>();
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_PRECO_CRESC, new CriterioPrecoCrescente());
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_DESC_CRESC, new CriterioDescricaoCrescente());
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_ESTOQUE_CRESC, new CriterioEstoqueCrescente());
+
+        CriterioOrdenacao criterioOrdenacao = criteriosOrdenacao.get(opcao_criterio_ord);
+        if (criterioOrdenacao == null) {
+            System.out.println("Criterio de ordenação inválido!");
+            System.exit(1);
+            return;
+        }
+
+        Comparator<Produto> comparador = criterioOrdenacao.getComparator();
 
         GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, formato);
 
