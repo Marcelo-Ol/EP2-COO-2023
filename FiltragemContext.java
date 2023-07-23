@@ -26,7 +26,7 @@ public class FiltragemContext {
     public boolean filtrar(Produto produto, String filtro, String argFiltro) {
         FiltragemStrategy strategy = strategies.get(filtro);
         if (strategy == null) {
-            throw new IllegalArgumentException("Filtro não suportado: " + filtro);
+            throw new IllegalArgumentException("Filtro invalido! : " + filtro);
         }
         return strategy.verificar(produto,filtro, argFiltro);
     }
