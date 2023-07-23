@@ -2,6 +2,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+
+    private static final int FORMATO_PADRAO = 0b0000;
+    private static final int FORMATO_NEGRITO = 0b0001;
+    private static final int FORMATO_ITALICO = 0b0010;
+
     public static void main(String[] args) {
         if (args.length < 4) {
             System.out.println("Uso:");
@@ -24,11 +29,11 @@ public class Main {
         String[] opcoes_formatacao = new String[2];
         opcoes_formatacao[0] = args.length > 4 ? args[4] : null;
         opcoes_formatacao[1] = args.length > 5 ? args[5] : null;
-        int formato = GeradorDeRelatorios.FORMATO_PADRAO;
+        int formato = FORMATO_PADRAO;
 
         for (int i = 0; i < opcoes_formatacao.length; i++) {
             String op = opcoes_formatacao[i];
-            formato |= (op != null ? op.equals("negrito") ? GeradorDeRelatorios.FORMATO_NEGRITO : (op.equals("italico") ? GeradorDeRelatorios.FORMATO_ITALICO : 0) : 0);
+            formato |= (op != null ? op.equals("negrito") ? FORMATO_NEGRITO : (op.equals("italico") ? FORMATO_ITALICO : 0) : 0);
         }
 
         ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutos();
@@ -44,26 +49,34 @@ public class Main {
             return;
         }
 
-        Map<String, CriterioOrdenacao> criteriosOrdenacao = new HashMap<>();
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_PRECO_CRESC, new CriterioPrecoCrescente());
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_DESC_CRESC, new CriterioDescricaoCrescente());
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_ESTOQUE_CRESC, new CriterioEstoqueCrescente());
+        ArrayList<ProdutoFormatado> produtosFormatados = aplicarFormatacao(produtos, formato);
 
-        CriterioOrdenacao criterioOrdenacao = criteriosOrdenacao.get(opcao_criterio_ord);
-        if (criterioOrdenacao == null) {
-            System.out.println("Criterio de ordenação inválido!");
-            System.exit(1);
-            return;
-        }
-
-        Comparator<Produto> comparador = criterioOrdenacao.getComparator();
-
-        GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, formato);
+        // Cria uma nova instância do GeradorDeRelatorios com os produtos já formatados
+        GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtosFormatados, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro);
 
         try {
             gerador.geraRelatorio("saida.html");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Método para aplicar formatação aos produtos
+    private static ArrayList<ProdutoFormatado> aplicarFormatacao(ArrayList<Produto> produtos, int formato) {
+        ArrayList<ProdutoFormatado> produtosFormatados = new ArrayList<>();
+        for (Produto produto : produtos) {
+            ProdutoFormatado produtoFormatado = new ProdutoPadraoFormatado(produto);
+
+            if ((formato & FORMATO_ITALICO) > 0) {
+                produtoFormatado = new ProdutoItalicoDecorator(produtoFormatado);
+            }
+
+            if ((formato & FORMATO_NEGRITO) > 0) {
+                produtoFormatado = new ProdutoNegritoDecorator(produtoFormatado);
+            }
+
+            produtosFormatados.add(produtoFormatado);
+        }
+        return produtosFormatados;
     }
 }
