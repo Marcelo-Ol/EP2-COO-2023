@@ -1,4 +1,4 @@
-public class FiltragemIntervalo implements FiltragemStrategy {
+public class FiltroIntervaloStrategy implements FiltragemStrategy {
         
 
     @Override

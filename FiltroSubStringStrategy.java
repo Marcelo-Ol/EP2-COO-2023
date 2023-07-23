@@ -1,4 +1,4 @@
-public class FiltragemSubString implements FiltragemStrategy {
+public class FiltroSubStringStrategy implements FiltragemStrategy {
     
     @Override
     public boolean verificar(Produto produto, String filtro, String argFiltro) {
