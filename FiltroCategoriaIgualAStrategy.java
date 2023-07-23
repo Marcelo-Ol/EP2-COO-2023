@@ -1,3 +1,5 @@
+
+
 public class FiltroCategoriaIgualAStrategy implements FiltragemStrategy {
     
     @Override

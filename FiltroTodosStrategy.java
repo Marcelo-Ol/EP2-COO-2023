@@ -1,3 +1,4 @@
+
 public class FiltroTodosStrategy implements FiltragemStrategy {
     
     @Override

@@ -1,3 +1,5 @@
+
+
 public class FiltroEstoqueStrategy implements FiltragemStrategy {
     
     @Override
