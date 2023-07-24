@@ -21,7 +21,7 @@ public class GeradorDeRelatorios {
     public static final int FORMATO_ITALICO = 0b0010;
 
     private ArrayList<Produto> produtos;
-    private Map<Integer, Map<String, String>> formatoEcor;
+    private Map<Integer, Map<String, String>> formato_linha;
     private String algoritmo;
     private String criterio;
     private String filtro;
@@ -30,9 +30,9 @@ public class GeradorDeRelatorios {
     private OrdenadorDeProdutos ordenador;
     private Comparator<Produto> comparador;
 
-    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, Map<Integer, Map<String, String>> formatoEcor, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
+    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, Map<Integer, Map<String, String>> formato_linha, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
         this.produtos = new ArrayList<>(produtos);
-        this.formatoEcor = formatoEcor;
+        this.formato_linha = formato_linha;
         this.algoritmo = algoritmo;
         this.criterio = criterio;
         this.filtro = filtro;
@@ -71,11 +71,11 @@ public class GeradorDeRelatorios {
             if (selecionado) {
                 out.print("<li>");
 
-                Map<String, String> formatoEcorProduto = formatoEcor.get(p.getId());
-                if (formatoEcorProduto != null) {
-                    String italicoStr = formatoEcorProduto.get("italico");
-                    String negritoStr = formatoEcorProduto.get("negrito");
-                    String cor = formatoEcorProduto.get("cor");
+                Map<String, String> formato_linhaProduto = formato_linha.get(p.getId());
+                if (formato_linhaProduto != null) {
+                    String italicoStr = formato_linhaProduto.get("italico");
+                    String negritoStr = formato_linhaProduto.get("negrito");
+                    String cor = formato_linhaProduto.get("cor");
 
                     boolean italico = Boolean.parseBoolean(italicoStr);
                     boolean negrito = Boolean.parseBoolean(negritoStr);
@@ -95,18 +95,18 @@ public class GeradorDeRelatorios {
                 
                 out.print(p.formataParaImpressao());
 
-                if (formatoEcorProduto != null) {
-                    String cor = formatoEcorProduto.get("cor");
+                if (formato_linhaProduto != null) {
+                    String cor = formato_linhaProduto.get("cor");
                     if (cor != null && !cor.isEmpty()) {
                         out.print("</span>");
                     }
 
-                    String negritoStr = formatoEcorProduto.get("negrito");
+                    String negritoStr = formato_linhaProduto.get("negrito");
                     if (Boolean.parseBoolean(negritoStr)) {
                         out.print("</span>");
                     } 
 
-                    String italicoStr = formatoEcorProduto.get("italico");
+                    String italicoStr = formato_linhaProduto.get("italico");
                     if (Boolean.parseBoolean(italicoStr)) {
                         out.print("</span>");
                     }
@@ -125,7 +125,7 @@ public class GeradorDeRelatorios {
         out.close();
     }
 
-    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formatoEcor) {
-        return LeitorCSV.carregaProdutosDoCSV(nomeArquivoCSV, formatoEcor);
+    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formato_linha) {
+        return LeitorCSV.carregaProdutosDoCSV(nomeArquivoCSV, formato_linha);
     }
 }

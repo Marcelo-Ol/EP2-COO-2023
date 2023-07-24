@@ -5,7 +5,7 @@ import java.util.*;
 
 public class LeitorCSV {
 
-    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formatoEcor) {
+    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formato_linha) {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivoCSV))) {
@@ -29,16 +29,15 @@ public class LeitorCSV {
                 boolean italico = Boolean.parseBoolean(campos[6].trim());
                 String cor = campos[7].trim();
 
-                // Criamos um novo produto com base nos valores do CSV e adicionamos à lista de produtos
                 Produto produto = new Produto() {
                     @Override
                     public void setQtdEstoque(int qtdEstoque) {
-                        // Implementação do método setQtdEstoque
+
                     }
 
                     @Override
                     public void setPreco(double preco) {
-                        // Implementação do método setPreco
+
                     }
 
                     @Override
@@ -70,28 +69,15 @@ public class LeitorCSV {
                     public String formataParaImpressao() {
                         return descricao + ", " + categoria + ", " + preco + ", " + quantidadeEstoque + " unidade(s) em estoque";
                     }
-
-                    public boolean isNegrito() {
-                        return negrito;
-                    }
-
-                    public boolean isItalico() {
-                        return italico;
-                    }
-
-                    public String getCor() {
-                        return cor;
-                    }
                 };
 
                 produtos.add(produto);
 
-                // Armazena as informações de formatação e cor do produto no mapa formatoEcor
-                Map<String, String> formatoEcorProduto = new HashMap<>();
-                formatoEcorProduto.put("italico", String.valueOf(italico));
-                formatoEcorProduto.put("negrito", String.valueOf(negrito));
-                formatoEcorProduto.put("cor", cor);
-                formatoEcor.put(id, formatoEcorProduto);
+                Map<String, String> formato_linhaProduto = new HashMap<>();
+                formato_linhaProduto.put("italico", String.valueOf(italico));
+                formato_linhaProduto.put("negrito", String.valueOf(negrito));
+                formato_linhaProduto.put("cor", cor);
+                formato_linha.put(id, formato_linhaProduto);
             }
         } catch (IOException e) {
             e.printStackTrace();
