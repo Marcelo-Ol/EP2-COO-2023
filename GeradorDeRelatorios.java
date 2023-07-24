@@ -87,21 +87,12 @@ public class GeradorDeRelatorios {
         out.println("<ul>");
 
         int count = 0;
-
+        FiltragemContext context = new FiltragemContext(); 
+        
         for (int i = 0; i < produtos.size(); i++) {
             Produto p = produtos.get(i);
-            boolean selecionado = false;
-
-            if (filtro.equals(FILTRO_TODOS)) {
-                selecionado = true;
-            } else if (filtro.equals(FILTRO_ESTOQUE_MENOR_OU_IQUAL_A)) {
-                if (p.getQtdEstoque() <= Integer.parseInt(argFiltro)) selecionado = true;    
-            } else if (filtro.equals(FILTRO_CATEGORIA_IGUAL_A)) {
-                if (p.getCategoria().equalsIgnoreCase(argFiltro)) selecionado = true;
-            } else {
-                throw new RuntimeException("Filtro invalido!");            
-            }
-
+            boolean selecionado = context.filtrar(p, filtro, argFiltro);
+            
             if (selecionado) {
                 out.print("<li>");
 
