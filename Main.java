@@ -1,18 +1,18 @@
 import java.io.IOException;
 import java.util.*;
 
-
 public class Main {
     public static void main(String[] args) {
-        if (args.length < 4) {
+        if (args.length < 5 || args.length > 6) {
             System.out.println("Uso:");
-            System.out.println("\tjava Main <algoritmo> <critério de ordenação> <critério de filtragem> <parâmetro de filtragem> <opções de formatação>");
+            System.out.println("\tjava Main <algoritmo> <critério de ordenação> <critério de filtragem> <parâmetro de filtragem> [<opções de formatação>] <arquivo.csv>");
             System.out.println("Onde:");
             System.out.println("\talgoritmo: 'quick' ou 'insertion'");
             System.out.println("\tcriterio de ordenação: 'preco_c' ou 'descricao_c' ou 'estoque_c' ou 'preco_d' ou 'descricao_d' ou 'estoque_d' ou 'intervalo_igual' ou 'descricao_igual'");
             System.out.println("\tcriterio de filtragem: 'todos' ou 'estoque_menor_igual' ou 'categoria_igual'");
-            System.out.println("\tparâmetro de filtragem: argumentos adicionais necessários para a filtragem");
+            System.out.println("\tparâmetro de filtragem: argumentos adicionais necessários para a filtragem (ignorado se o critério de filtragem for 'todos')");
             System.out.println("\topções de formatação: 'negrito' e/ou 'italico'");
+            System.out.println("\tarquivo.csv: caminho para o arquivo CSV contendo os dados dos produtos");
             System.out.println();
             System.exit(1);
         }
@@ -21,11 +21,24 @@ public class Main {
         String opcao_criterio_ord = args[1];
         String opcao_criterio_filtro = args[2];
         String opcao_parametro_filtro = args[3];
-        String nome_ArquivoCSV = args[5];
-
+        String nome_ArquivoCSV;
         String[] opcoes_formatacao = new String[2];
-        opcoes_formatacao[0] = args.length > 5 ? args[5] : null;
-        opcoes_formatacao[1] = args.length > 6 ? args[6] : null;
+
+        if (args.length == 5) {
+            nome_ArquivoCSV = args[4];
+        } else if (args.length == 6) {
+            opcoes_formatacao[0] = args[4];
+            nome_ArquivoCSV = args[5];
+        } else if (args.length == 7) {
+            opcoes_formatacao[0] = args[4];
+            opcoes_formatacao[1] = args[5];
+            nome_ArquivoCSV = args[6];
+        } else {
+            System.out.println("Quantidade de argumentos inválida!");
+            System.exit(1);
+            return;
+        }
+        
         int format_flags = GeradorDeRelatorios.FORMATO_PADRAO;
 
         Map<Integer, Map<String, String>> formato_linha = new HashMap<>();
