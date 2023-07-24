@@ -16,10 +16,6 @@ public class GeradorDeRelatorios {
     public static final String CRIT_ESTOQUE_CRESC = "estoque_c";
     public static final String CRIT_ESTOQUE_DECRES = "estoque_d";
     
-    public static final String FILTRO_TODOS = "todos";
-    public static final String FILTRO_ESTOQUE_MENOR_OU_IQUAL_A = "estoque_menor_igual";
-    public static final String FILTRO_CATEGORIA_IGUAL_A = "categoria_igual";
-
     public static final int FORMATO_PADRAO  = 0b0000;
     public static final int FORMATO_NEGRITO = 0b0001;
     public static final int FORMATO_ITALICO = 0b0010;
