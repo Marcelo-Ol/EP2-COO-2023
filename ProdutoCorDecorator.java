@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ProdutoCorDecorator extends ProdutoDecorator {
-    private String cor;
+    private static String cor;
 
     public ProdutoCorDecorator(Produto produto) {
         super(produto);
@@ -12,29 +12,22 @@ public class ProdutoCorDecorator extends ProdutoDecorator {
 
     @Override
     public String formataParaImpressao() {
-        return "<span style=\"color" + cor + "\">" + produto.formataParaImpressao() + "</span>";
+        return "<span style=\"color:" + cor + "\">" + produto.formataParaImpressao() + "</span>";
     }
 
     public static void main(String[] args){
-        ProdutoCorDecorator obj = new ProdutoCorDecorator(produto);
-        obj.run();
-    }
-
-    public void run(){
-        String arquivoCSV = "produtos.csv";
         BufferedReader br = null;
         String linha = "";
-        String csvDivisor = ",";
 
         try{
 
-            br = new BufferedReader(new FileReader(arquivoCSV));
+            br = new BufferedReader(new FileReader("produtos.csv"));
 
             while ((linha = br.readLine()) != null){
                 
-                String[] produto = linha.split(csvDivisor);
+                String[] produtos = linha.split(",");
 
-                cor = produto[produto.length-1];
+                cor = produtos[produtos.length-1];
             }
 
         } catch (FileNotFoundException e){
@@ -52,6 +45,7 @@ public class ProdutoCorDecorator extends ProdutoDecorator {
                 try{
                     
                     br.close();
+                    
                 } catch (IOException e){
 
                     e.printStackTrace();
