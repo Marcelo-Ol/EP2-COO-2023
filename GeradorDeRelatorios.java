@@ -1,6 +1,8 @@
 import java.io.PrintWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 
 public class GeradorDeRelatorios {
 
@@ -18,8 +20,6 @@ public class GeradorDeRelatorios {
     public static final String FILTRO_ESTOQUE_MENOR_OU_IQUAL_A = "estoque_menor_igual";
     public static final String FILTRO_CATEGORIA_IGUAL_A = "categoria_igual";
 
-    // operador bit a bit "ou" pode ser usado para combinar mais de  
-    // um estilo de formatacao simultaneamente (veja como no main)
     public static final int FORMATO_PADRAO  = 0b0000;
     public static final int FORMATO_NEGRITO = 0b0001;
     public static final int FORMATO_ITALICO = 0b0010;
@@ -30,14 +30,18 @@ public class GeradorDeRelatorios {
     private String filtro;
     private String argFiltro;
     private int format_flags;
+    private OrdenadorDeProdutos ordenador;
+    private Comparator<Produto> comparador;
 
-    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags){
+    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
         this.produtos = new ArrayList<>(produtos);
         this.algoritmo = algoritmo;
         this.criterio = criterio;
         this.filtro = filtro;
         this.argFiltro = argFiltro;
         this.format_flags = format_flags;
+        this.ordenador = ordenador;
+        this.comparador = comparador;
     }
 
     public void debug() {
@@ -47,34 +51,6 @@ public class GeradorDeRelatorios {
 
     public void geraRelatorio(String arquivoSaida) throws IOException {
         debug();
-
-        Comparator<Produto> comparador = null;
-
-        if (criterio.equals(CRIT_DESC_CRESC)) {
-            comparador = Comparator.comparing(Produto::getDescricao, String.CASE_INSENSITIVE_ORDER);
-        } else if (criterio.equals(CRIT_DESC_DECRES)) {
-            comparador = Comparator.comparing(Produto::getDescricao, String.CASE_INSENSITIVE_ORDER).reversed();
-        } else if (criterio.equals(CRIT_PRECO_CRESC)) {
-            comparador = Comparator.comparingDouble(Produto::getPreco);
-        } else if (criterio.equals(CRIT_PRECO_DECRES)) {
-            comparador = Comparator.comparingDouble(Produto::getPreco).reversed();
-        } else if (criterio.equals(CRIT_ESTOQUE_CRESC)) {
-            comparador = Comparator.comparingInt(Produto::getQtdEstoque);
-        } else if (criterio.equals(CRIT_ESTOQUE_DECRES)) {
-            comparador = Comparator.comparingInt(Produto::getQtdEstoque).reversed();
-        } else {
-            throw new IllegalArgumentException("Criterio invalido!");
-        }
-
-        OrdenadorDeProdutos ordenador;
-
-        if (algoritmo.equals(ALG_INSERTIONSORT)) {
-            ordenador = new InsertionSort();
-        } else if (algoritmo.equals(ALG_QUICKSORT)) {
-            ordenador = new QuickSort();
-        } else {
-            throw new IllegalArgumentException("Algoritmo de ordenação inválido!");
-        }
 
         ordenador.ordenar(produtos, comparador);
 

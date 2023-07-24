@@ -34,11 +34,12 @@ public class Main {
         ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutos();
         OrdenadorDeProdutos ordenador;
 
-        if (opcao_algoritmo.equals(GeradorDeRelatorios.ALG_INSERTIONSORT)) {
-            ordenador = new InsertionSort();
-        } else if (opcao_algoritmo.equals(GeradorDeRelatorios.ALG_QUICKSORT)) {
-            ordenador = new QuickSort();
-        } else {
+        Map<String, OrdenadorDeProdutos> estrategiaOrdenacao = new HashMap<>();
+        estrategiaOrdenacao.put(GeradorDeRelatorios.ALG_INSERTIONSORT, new InsertionSort());
+        estrategiaOrdenacao.put(GeradorDeRelatorios.ALG_QUICKSORT, new QuickSort());
+
+        ordenador = estrategiaOrdenacao.get(opcao_algoritmo);
+        if (ordenador == null) {
             System.out.println("Algoritmo de ordenação inválido!");
             System.exit(1);
             return;
@@ -59,9 +60,12 @@ public class Main {
             return;
         }
 
-        Comparator<Produto> comparador = criterioOrdenacao.getComparator();
+        Comparator<Produto> comparador = criteriosOrdenacao.get(opcao_criterio_ord).getComparator();
 
-        GeradorDeRelatorios gerador = new GeradorDeRelatorios(produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, opcao_parametro_filtro, format_flags);
+        GeradorDeRelatorios gerador = new GeradorDeRelatorios(
+            produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro, 
+            opcao_parametro_filtro, format_flags, ordenador, comparador
+        );
 
         try {
             gerador.geraRelatorio("saida.html");
