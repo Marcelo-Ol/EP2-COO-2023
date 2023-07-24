@@ -22,22 +22,16 @@ public class GeradorDeRelatorios {
 
     private ArrayList<Produto> produtos;
     private Map<Integer, Map<String, String>> formato_linha;
-    private String algoritmo;
-    private String criterio;
     private String filtro;
     private String argFiltro;
-    private int format_flags;
     private OrdenadorDeProdutos ordenador;
     private Comparator<Produto> comparador;
 
     public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, Map<Integer, Map<String, String>> formato_linha, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
         this.produtos = new ArrayList<>(produtos);
         this.formato_linha = formato_linha;
-        this.algoritmo = algoritmo;
-        this.criterio = criterio;
         this.filtro = filtro;
         this.argFiltro = argFiltro;
-        this.format_flags = format_flags;
         this.ordenador = ordenador;
         this.comparador = comparador;
     }
