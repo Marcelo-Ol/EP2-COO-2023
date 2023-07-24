@@ -48,9 +48,9 @@ public class Main {
         criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_PRECO_CRESC, new CriterioPrecoCrescente());
         criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_DESC_CRESC, new CriterioDescricaoCrescente());
         criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_ESTOQUE_CRESC, new CriterioEstoqueCrescente());
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_PRECO_DECRES, new CriterioPrecoDecrescente()); // Adicionar novo critério
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_DESC_DECRES, new CriterioDescricaoDecrescente()); // Adicionar novo critério
-        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_ESTOQUE_DECRES, new CriterioEstoqueDecrescente()); // Adicionar novo critério
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_PRECO_DECRES, new CriterioPrecoDecrescente()); 
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_DESC_DECRES, new CriterioDescricaoDecrescente()); 
+        criteriosOrdenacao.put(GeradorDeRelatorios.CRIT_ESTOQUE_DECRES, new CriterioEstoqueDecrescente());
 
         CriterioOrdenacao criterioOrdenacao = criteriosOrdenacao.get(opcao_criterio_ord);
         if (criterioOrdenacao == null) {
