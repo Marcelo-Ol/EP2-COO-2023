@@ -21,11 +21,11 @@ public class Main {
         String opcao_criterio_ord = args[1];
         String opcao_criterio_filtro = args[2];
         String opcao_parametro_filtro = args[3];
-        String nomeArquivoCSV = args[4];
+        String nome_ArquivoCSV = args[5];
 
         String[] opcoes_formatacao = new String[2];
-        opcoes_formatacao[0] = args.length > 5 ? args[5] : null;
-        opcoes_formatacao[1] = args.length > 6 ? args[6] : null;
+        opcoes_formatacao[0] = args.length > 5 ? args[4] : null;
+        opcoes_formatacao[1] = args.length > 6 ? args[5] : null;
         int format_flags = GeradorDeRelatorios.FORMATO_PADRAO;
 
         for (int i = 0; i < opcoes_formatacao.length; i++) {
@@ -33,7 +33,7 @@ public class Main {
             format_flags |= (op != null ? op.equals("negrito") ? GeradorDeRelatorios.FORMATO_NEGRITO : (op.equals("italico") ? GeradorDeRelatorios.FORMATO_ITALICO : 0) : 0);
         }
 
-        ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutosDoCSV(nomeArquivoCSV);
+        ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutosDoCSV(nome_ArquivoCSV);
         OrdenadorDeProdutos ordenador;
 
         Map<String, OrdenadorDeProdutos> estrategiaOrdenacao = new HashMap<>();
