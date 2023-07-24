@@ -21,6 +21,7 @@ public class GeradorDeRelatorios {
     public static final int FORMATO_ITALICO = 0b0010;
 
     private ArrayList<Produto> produtos;
+    private Map<Integer, Map<String, String>> formatoEcor;
     private String algoritmo;
     private String criterio;
     private String filtro;
@@ -29,8 +30,9 @@ public class GeradorDeRelatorios {
     private OrdenadorDeProdutos ordenador;
     private Comparator<Produto> comparador;
 
-    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
+    public GeradorDeRelatorios(ArrayList<Produto> produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags, Map<Integer, Map<String, String>> formatoEcor, OrdenadorDeProdutos ordenador, Comparator<Produto> comparador) {
         this.produtos = new ArrayList<>(produtos);
+        this.formatoEcor = formatoEcor;
         this.algoritmo = algoritmo;
         this.criterio = criterio;
         this.filtro = filtro;
@@ -39,6 +41,7 @@ public class GeradorDeRelatorios {
         this.ordenador = ordenador;
         this.comparador = comparador;
     }
+
 
     public void debug() {
         System.out.println("Gerando relatório para ArrayList contendo " + produtos.size() + " produto(s)");
@@ -60,30 +63,53 @@ public class GeradorDeRelatorios {
 
         int count = 0;
         FiltragemContext context = new FiltragemContext(); 
-        
+
         for (int i = 0; i < produtos.size(); i++) {
             Produto p = produtos.get(i);
             boolean selecionado = context.filtrar(p, filtro, argFiltro);
-            
+
             if (selecionado) {
                 out.print("<li>");
 
-                if ((format_flags & FORMATO_ITALICO) > 0) {
-                    out.print("<span style=\"font-style:italic\">");
-                }
+                Map<String, String> formatoEcorProduto = formatoEcor.get(p.getId());
+                if (formatoEcorProduto != null) {
+                    String italicoStr = formatoEcorProduto.get("italico");
+                    String negritoStr = formatoEcorProduto.get("negrito");
+                    String cor = formatoEcorProduto.get("cor");
 
-                if ((format_flags & FORMATO_NEGRITO) > 0) {
-                    out.print("<span style=\"font-weight:bold\">");
-                } 
-            
+                    boolean italico = Boolean.parseBoolean(italicoStr);
+                    boolean negrito = Boolean.parseBoolean(negritoStr);
+
+                    if (italico) {
+                        out.print("<span style=\"font-style:italic\">");
+                    }
+
+                    if (negrito) {
+                        out.print("<span style=\"font-weight:bold\">");
+                    } 
+
+                    if (cor != null && !cor.isEmpty()) {
+                        out.print("<span style=\"color:" + cor + "\">");
+                    }
+                }
+                
                 out.print(p.formataParaImpressao());
 
-                if ((format_flags & FORMATO_NEGRITO) > 0) {
-                    out.print("</span>");
-                } 
+                if (formatoEcorProduto != null) {
+                    String cor = formatoEcorProduto.get("cor");
+                    if (cor != null && !cor.isEmpty()) {
+                        out.print("</span>");
+                    }
 
-                if ((format_flags & FORMATO_ITALICO) > 0) {
-                    out.print("</span>");
+                    String negritoStr = formatoEcorProduto.get("negrito");
+                    if (Boolean.parseBoolean(negritoStr)) {
+                        out.print("</span>");
+                    } 
+
+                    String italicoStr = formatoEcorProduto.get("italico");
+                    if (Boolean.parseBoolean(italicoStr)) {
+                        out.print("</span>");
+                    }
                 }
 
                 out.println("</li>");
@@ -99,7 +125,7 @@ public class GeradorDeRelatorios {
         out.close();
     }
 
-    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV) {
-        return LeitorCSV.carregaProdutosDoCSV(nomeArquivoCSV);
+    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formatoEcor) {
+        return LeitorCSV.carregaProdutosDoCSV(nomeArquivoCSV, formatoEcor);
     }
 }

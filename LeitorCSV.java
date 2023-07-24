@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 public class LeitorCSV {
 
-    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV) {
+    public static ArrayList<Produto> carregaProdutosDoCSV(String nomeArquivoCSV, Map<Integer, Map<String, String>> formatoEcor) {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivoCSV))) {
@@ -33,12 +33,12 @@ public class LeitorCSV {
                 Produto produto = new Produto() {
                     @Override
                     public void setQtdEstoque(int qtdEstoque) {
-
+                        // Implementação do método setQtdEstoque
                     }
 
                     @Override
                     public void setPreco(double preco) {
-
+                        // Implementação do método setPreco
                     }
 
                     @Override
@@ -85,6 +85,13 @@ public class LeitorCSV {
                 };
 
                 produtos.add(produto);
+
+                // Armazena as informações de formatação e cor do produto no mapa formatoEcor
+                Map<String, String> formatoEcorProduto = new HashMap<>();
+                formatoEcorProduto.put("italico", String.valueOf(italico));
+                formatoEcorProduto.put("negrito", String.valueOf(negrito));
+                formatoEcorProduto.put("cor", cor);
+                formatoEcor.put(id, formatoEcorProduto);
             }
         } catch (IOException e) {
             e.printStackTrace();

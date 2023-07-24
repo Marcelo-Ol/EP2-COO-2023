@@ -24,16 +24,19 @@ public class Main {
         String nome_ArquivoCSV = args[5];
 
         String[] opcoes_formatacao = new String[2];
-        opcoes_formatacao[0] = args.length > 5 ? args[4] : null;
-        opcoes_formatacao[1] = args.length > 6 ? args[5] : null;
+        opcoes_formatacao[0] = args.length > 5 ? args[5] : null;
+        opcoes_formatacao[1] = args.length > 6 ? args[6] : null;
         int format_flags = GeradorDeRelatorios.FORMATO_PADRAO;
+
+        Map<Integer, Map<String, String>> formatoEcor = new HashMap<>();
+        ArrayList<Produto> produtos = LeitorCSV.carregaProdutosDoCSV(nome_ArquivoCSV, formatoEcor);
 
         for (int i = 0; i < opcoes_formatacao.length; i++) {
             String op = opcoes_formatacao[i];
             format_flags |= (op != null ? op.equals("negrito") ? GeradorDeRelatorios.FORMATO_NEGRITO : (op.equals("italico") ? GeradorDeRelatorios.FORMATO_ITALICO : 0) : 0);
         }
 
-        ArrayList<Produto> produtos = GeradorDeRelatorios.carregaProdutosDoCSV(nome_ArquivoCSV);
+        produtos = GeradorDeRelatorios.carregaProdutosDoCSV(nome_ArquivoCSV, formatoEcor);
         OrdenadorDeProdutos ordenador;
 
         Map<String, OrdenadorDeProdutos> estrategiaOrdenacao = new HashMap<>();
@@ -65,9 +68,9 @@ public class Main {
         Comparator<Produto> comparador = criteriosOrdenacao.get(opcao_criterio_ord).getComparator();
 
         GeradorDeRelatorios gerador = new GeradorDeRelatorios(
-                produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro,
-                opcao_parametro_filtro, format_flags, ordenador, comparador
-        );
+            produtos, opcao_algoritmo, opcao_criterio_ord, opcao_criterio_filtro,
+            opcao_parametro_filtro, format_flags, formatoEcor, ordenador, comparador
+    );
 
         try {
             gerador.geraRelatorio("saida.html");
